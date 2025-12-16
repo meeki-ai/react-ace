@@ -49,7 +49,6 @@ The library provides three main editor components in `/src/`:
 ### Dependencies
 - **ace-builds** - Modern Ace editor (replaces legacy brace)
 - **diff-match-patch** - Powers diff editor functionality
-- **lodash.get**, **lodash.isequal** - Minimal lodash utilities
 - **prop-types** - Runtime type checking for older React versions
 
 ## Development Notes

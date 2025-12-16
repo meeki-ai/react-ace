@@ -36,9 +36,6 @@
     "@testing-library/react": "^16.2.0",
     "@types/chai": "^4.3.14",
     "@types/diff-match-patch": "^1.0.36",
-    "@types/lodash": "^4.17.0",
-    "@types/lodash.get": "^4.4.9",
-    "@types/lodash.isequal": "^4.5.8",
     "@types/node": "^22.5.5",
     "@types/prop-types": "^15.7.12",
     "@types/react": "^19.0.8",
@@ -73,8 +70,7 @@
   "dependencies": {
     "ace-builds": "^1.36.3",
     "diff-match-patch": "^1.0.5",
-    "lodash.get": "^4.4.2",
-    "lodash.isequal": "^4.5.0",
+    "fast-equals": "^5.3.3",
     "prop-types": "^15.8.1"
   },
   "husky": {

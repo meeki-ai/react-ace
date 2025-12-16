@@ -9,8 +9,7 @@ import { Ace, Range } from "ace-builds"; // oxlint-disable-line
 import { Split } from "ace-builds/src-noconflict/ext-split";
 import * as PropTypes from "prop-types";
 import * as React from "react";
-import isEqual from "lodash.isequal";
-import get from "lodash.get";
+import { deepEqual } from "fast-equals";
 import {
   IAceEditor,
   IAceOptions,
@@ -242,8 +241,8 @@ export default class SplitComponent extends React.Component<ISplitEditorProps> {
       for (let i = 0; i < editorProps.length; i++) {
         editor[editorProps[i]] = this.props.editorProps[editorProps[i]];
       }
-      const defaultValueForEditor = get(defaultValue, index);
-      const valueForEditor = get(value, index, "");
+      const defaultValueForEditor = defaultValue?.[index];
+      const valueForEditor = value?.[index] ?? "";
       editor.session.setUndoManager(new ace.UndoManager());
       editor.setTheme(`ace/theme/${theme}`);
       editor.renderer.setScrollMargin(
@@ -274,8 +273,8 @@ export default class SplitComponent extends React.Component<ISplitEditorProps> {
           : defaultValueForEditor,
         cursorStart
       );
-      const newAnnotations = get(annotations, index, []);
-      const newMarkers = get(markers, index, []);
+      const newAnnotations = annotations?.[index] ?? [];
+      const newMarkers = markers?.[index] ?? [];
       editor.getSession().setAnnotations(newAnnotations);
       if (newMarkers && newMarkers.length > 0) {
         this.handleMarkers(newMarkers, editor);
@@ -287,7 +286,7 @@ export default class SplitComponent extends React.Component<ISplitEditorProps> {
           editor.setOption(option as any, this.props[option]);
         } else if (this.props[option]) {
           console.warn(
-            `ReaceAce: editor option ${option} was activated but not found. Did you need to import a related tool or did you possibly mispell the option?`
+            `ReactAce: editor option ${option} was activated but not found. Did you need to import a related tool or did you possibly misspell the option?`
           );
         }
       }
@@ -374,10 +373,10 @@ export default class SplitComponent extends React.Component<ISplitEditorProps> {
           editor.setOption(option as any, nextProps[option]);
         }
       }
-      if (!isEqual(nextProps.setOptions, oldProps.setOptions)) {
+      if (!deepEqual(nextProps.setOptions, oldProps.setOptions)) {
         this.handleOptions(nextProps, editor);
       }
-      const nextValue = get(nextProps.value, index, "");
+      const nextValue = nextProps.value?.[index] ?? "";
       if (editor.getValue() !== nextValue) {
         // editor.setValue is a synchronous function call, change event is emitted before setValue return.
         this.silent = true;
@@ -386,15 +385,15 @@ export default class SplitComponent extends React.Component<ISplitEditorProps> {
         (editor.session.selection as any).fromJSON(pos);
         this.silent = false;
       }
-      const newAnnotations = get(nextProps.annotations, index, []);
-      const oldAnnotations = get(oldProps.annotations, index, []);
-      if (!isEqual(newAnnotations, oldAnnotations)) {
+      const newAnnotations = nextProps.annotations?.[index] ?? [];
+      const oldAnnotations = oldProps.annotations?.[index] ?? [];
+      if (!deepEqual(newAnnotations, oldAnnotations)) {
         editor.getSession().setAnnotations(newAnnotations);
       }
 
-      const newMarkers = get(nextProps.markers, index, []);
-      const oldMarkers = get(oldProps.markers, index, []);
-      if (!isEqual(newMarkers, oldMarkers) && Array.isArray(newMarkers)) {
+      const newMarkers = nextProps.markers?.[index] ?? [];
+      const oldMarkers = oldProps.markers?.[index] ?? [];
+      if (!deepEqual(newMarkers, oldMarkers) && Array.isArray(newMarkers)) {
         this.handleMarkers(newMarkers, editor);
       }
     });

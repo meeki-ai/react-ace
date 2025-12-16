@@ -3,7 +3,7 @@ import * as AceBuilds from "ace-builds";
 import * as PropTypes from "prop-types";
 import * as React from "react";
 
-import isEqual from "lodash.isequal";
+import { deepEqual } from "fast-equals";
 
 import {
   debounce,
@@ -415,22 +415,25 @@ export default class ReactAce extends React.Component<IAceEditorProps> {
     if (nextProps.showGutter !== oldProps.showGutter) {
       this.editor.renderer.setShowGutter(nextProps.showGutter);
     }
-    if (!isEqual(nextProps.setOptions, oldProps.setOptions)) {
+    if (!deepEqual(nextProps.setOptions, oldProps.setOptions)) {
       this.handleOptions(nextProps);
     }
     // if the value or annotations changed, set the annotations
     // changing the value may create create a new session which will require annotations to be re-set
-    if (valueChanged || !isEqual(nextProps.annotations, oldProps.annotations)) {
+    if (
+      valueChanged ||
+      !deepEqual(nextProps.annotations, oldProps.annotations)
+    ) {
       this.editor.getSession().setAnnotations(nextProps.annotations || []);
     }
     const oldMarkers = oldProps.markers || [];
     const nextMarkers = nextProps.markers || [];
-    if (!isEqual(oldMarkers, nextMarkers)) {
+    if (!deepEqual(oldMarkers, nextMarkers)) {
       this.handleMarkers(nextMarkers);
     }
 
     // this doesn't look like it works at all....
-    if (!isEqual(nextProps.scrollMargin, oldProps.scrollMargin)) {
+    if (!deepEqual(nextProps.scrollMargin, oldProps.scrollMargin)) {
       this.handleScrollMargins(nextProps.scrollMargin);
     }
 
